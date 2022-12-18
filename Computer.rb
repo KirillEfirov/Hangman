@@ -1,8 +1,9 @@
 class Computer
     def initialize
         @dictionary = Array.new
-        @word
-        @wrong_letters = Array.new
+        @guessedWord = String.new
+        @wrongLetters = Array.new
+        @filledWord = Array.new
     end
 
     public
@@ -11,11 +12,7 @@ class Computer
     end
 
     def choose_word
-        @word = @dictionary.sample
-    end
-
-    def show_word
-        puts @word
+        @guessedWord = @dictionary.sample
     end
 
     def show_dictionary
@@ -35,12 +32,19 @@ class Computer
     end
 
     public
-    def count_letters(word)
-
+    def create_filled_word
+        @filledWord = Array.new(count_letters(@guessedWord), "_")
     end
 
-    def display_word(word)
+    def display_filled_word()
+        print "Guessed word: "
+        @filledWord.each { |letter| print letter + " " }
+        puts
+    end
 
+    private
+    def count_letters(word)
+        word.size
     end
 
     #if is_letter_true? returns true then insert the letter in a word
