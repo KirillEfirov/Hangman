@@ -1,12 +1,21 @@
 class Computer
     def initialize
         @dictionary = Array.new
+        @word
         @wrong_letters = Array.new
     end
 
     public
     def create_dictionary(file)
         @dictionary = read_content(file)
+    end
+
+    def choose_word
+        @word = @dictionary.sample
+    end
+
+    def show_word
+        puts @word
     end
 
     def show_dictionary
