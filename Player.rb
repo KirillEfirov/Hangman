@@ -1,14 +1,15 @@
+require "yaml"
+#Number of attempts, all the letters should be serialized
+
 class Player
     def initialize
         @try = 0
-        @attempt
         @guesses = Array.new
     end
 
     def guess_letter
-        @attempt = gets.chomp!
         @try += 1
-        @guesses.push(@attempt)
+        @guesses.push(gets.chomp!)
     end
 
     def guess_word
