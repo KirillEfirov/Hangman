@@ -20,7 +20,10 @@ class Computer
         @dictionary
     end
 
-    public
+    def get_filled_word
+        @filled_word
+    end
+
     def create_filled_word
         @filled_word = Array.new(count_letters(@guessed_word) - 1, "_")
     end
@@ -47,8 +50,11 @@ class Computer
         @wrong_letters
     end
 
-    #private
     def is_letter_true?(letter)
         @guessed_word.include? letter
+    end
+
+    def is_player_win?
+        @filled_word.any? { |any| any == "_" }
     end
 end
