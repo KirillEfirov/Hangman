@@ -1,7 +1,7 @@
 require_relative "Computer.rb"
 require_relative "Player.rb"
 require_relative "Rules"
-require_relative "Games.rb"
+require_relative "Game.rb"
 require "yaml"
 
 rules = Rules.new
@@ -37,7 +37,7 @@ when "1"
     if player.get_guesses.last == "save"
       player.get_guesses.pop()                                   #pop last elem in order not to save the word 'save' in player's attempts 
 
-      game = Games.new(player, computer)
+      game = Game.new(player, computer)
 
       File.open("game.yaml", "w") do |file| 
         file.write(game.to_yaml)
@@ -73,7 +73,7 @@ when "2"
     data_in_yaml = file.read
   end
 
-  deserialized_data = Games.from_yaml(data_in_yaml)
+  deserialized_data = Game.from_yaml(data_in_yaml)
 
   p deserialized_data
   player = deserialized_data[0]
