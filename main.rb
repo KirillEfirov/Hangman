@@ -4,55 +4,6 @@ require_relative "Rules"
 require_relative "Game.rb"
 require "yaml"
 
-rules = Rules.new
-rules.show_rules
-
-puts "Hangman. Would you like to: 1) Start a new game"
-puts "                            2) Load a game"
-
-
-case gets.chomp!
-when "1"
-  computer = Computer.new
-  player = Player.new
-
-  computer.choose_word("words.txt")
-  p computer.get_guessed_word                                   #Don't forget to remove it from player later
-  computer.create_filled_word
-  print "Guessed word: "
-  computer.display_filled_word
-
-  puts
-
-  game(computer, player)
-
-when "2"
-  data_in_yaml = String.new
-
-  print "Enter file name to load the game(without extension): "
-  filename = gets.chomp!
-  puts
-
-  if File.exist?("#{filename}.yaml")
-    File.open("#{filename}.yaml", "r") do |file|
-      data_in_yaml = file.read
-    end
-
-    deserialized_data = Game.from_yaml(data_in_yaml)
-
-    player = deserialized_data[0]
-    computer = deserialized_data[1]
-
-    game(computer, player, filename)
-
-  else 
-    puts "File is not found"
-    exit
-  end
-else
-  exit
-end
-
 def game(computer, player, filename = "")
   puts "-" * 80
   puts "If you want to save a current game type 'save' at any moment"
@@ -99,6 +50,59 @@ def game(computer, player, filename = "")
     end
   end
 
-  p "Better luck next time"
+  print "Better luck next time\nGuessed word: #{computer.get_guessed_word}"
   File.delete("#{filename}.yaml") if File.exist?("#{filename}.yaml")
+end
+
+rules = Rules.new
+rules.show_rules
+
+puts "Hangman. Would you like to: 1) Start a new game"
+puts "                            2) Load a game"
+
+
+case gets.chomp!
+when "1"
+  computer = Computer.new
+  player = Player.new
+
+  computer.choose_word("words.txt")
+  #p computer.get_guessed_word                                   #Don't forget to remove it from player later
+  computer.create_filled_word
+  print "Guessed word: "
+  computer.display_filled_word
+
+  puts
+
+  game(computer, player)
+
+when "2"
+  data_in_yaml = String.new
+
+  print "Enter file name to load the game(without extension): "
+  filename = gets.chomp!
+  puts
+
+  if File.exist?("#{filename}.yaml")
+    File.open("#{filename}.yaml", "r") do |file|
+      data_in_yaml = file.read
+    end
+
+    deserialized_data = Game.from_yaml(data_in_yaml)
+
+    player = deserialized_data[0]
+    computer = deserialized_data[1]
+
+    print "Guessed word: "
+    computer.display_filled_word
+    puts
+
+    game(computer, player, filename)
+
+  else 
+    puts "File is not found"
+    exit
+  end
+else
+  exit
 end
