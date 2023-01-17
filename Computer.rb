@@ -1,44 +1,33 @@
 class Computer
     def initialize
-        @dictionary = Array.new
-        @guessedWord = String.new
-        @wrongLetters = Array.new
-        @filledWord = Array.new
+        @guessed_word = String.new
+        @wrong_letters = Array.new
+        @filled_word = Array.new
     end
 
     public
-    def create_dictionary(file)
-        @dictionary = read_content(file)
+    def choose_word(file)
+        @guessed_word = File.open(file, "r") do |content|
+            content.readlines.sample
+        end
     end
 
-    def choose_word
-        @guessedWord = @dictionary.sample
+    def get_guessed_word
+       @guessed_word 
     end
 
     def show_dictionary
         puts @dictionary
     end
 
-    private
-    def read_content(file)
-        File.open(file, "r") do |content|
-            content.readlines
-        end
-    end
-
-    private
-    def is_letter_true?(letter)
-
-    end
-
     public
     def create_filled_word
-        @filledWord = Array.new(count_letters(@guessedWord), "_")
+        @filled_word = Array.new(count_letters(@guessed_word) - 1, "_")
     end
 
     def display_filled_word()
         print "Guessed word: "
-        @filledWord.each { |letter| print letter + " " }
+        @filled_word.each { |letter| print letter + " " }
         puts
     end
 
@@ -48,14 +37,19 @@ class Computer
     end
 
     #if is_letter_true? returns true then insert the letter in a word
+    public
     def insert_right_letter(word)
-
     end
 
     def add_wrong_letter(letter)
+        @wrong_letters.push(letter)
     end
 
     def display_wrong_letters()
+    end
 
+    #private
+    def is_letter_true?(letter)
+        @guessed_word.include? letter
     end
 end
