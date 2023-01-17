@@ -1,3 +1,5 @@
+require "yaml" #to save guessed word, wrong and right letters, number of missed attempts
+
 class Computer
     def initialize
         @guessed_word = String.new
@@ -7,17 +9,15 @@ class Computer
 
     public
     def choose_word(file)
-        @guessed_word = File.open(file, "r") do |content|
-            content.readlines.sample
-        end
+        @guessed_word = File.open(file, "r") { |content| content.readlines.sample }
     end
 
     def get_guessed_word
        @guessed_word 
     end
 
-    def show_dictionary
-        puts @dictionary
+    def get_dictionary
+        @dictionary
     end
 
     public
@@ -26,9 +26,7 @@ class Computer
     end
 
     def display_filled_word()
-        print "Guessed word: "
         @filled_word.each { |letter| print letter + " " }
-        puts
     end
 
     private
@@ -36,16 +34,17 @@ class Computer
         word.size
     end
 
-    #if is_letter_true? returns true then insert the letter in a word
     public
-    def insert_right_letter(word)
+    def insert_right_letter(guessed_letter)
+        @guessed_word.split("").each_with_index { |letter, ind| @filled_word[ind] = letter if letter == guessed_letter }
     end
 
     def add_wrong_letter(letter)
         @wrong_letters.push(letter)
     end
 
-    def display_wrong_letters()
+    def get_wrong_letters()
+        @wrong_letters
     end
 
     #private
