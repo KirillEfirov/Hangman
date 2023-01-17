@@ -39,7 +39,11 @@ when "1"
 
       game = Game.new(player, computer)
 
-      File.open("game.yaml", "w") do |file| 
+      print "Enter file name to save the game(without extension): "
+      filename = gets.chomp!
+      puts
+
+      File.open("#{filename}.yaml", "w") do |file| 
         file.write(game.to_yaml)
       end
       exit
@@ -69,15 +73,72 @@ when "1"
 
 when "2"
   data_in_yaml = String.new
-  File.open("game.yaml", "r") do |file|
-    data_in_yaml = file.read
+
+  print "Enter file name to load the game(without extension): "
+  filename = gets.chomp!
+  puts
+
+  if File.exist?("#{filename}.yaml")
+    File.open("#{filename}.yaml", "r") do |file|
+      data_in_yaml = file.read
+    end
+
+    deserialized_data = Game.from_yaml(data_in_yaml)
+
+    player = deserialized_data[0]
+    computer = deserialized_data[1]
+
+    puts "-" * 80
+    puts "If you want to save a current game type 'save' at any moment"
+    puts "-" * 80
+
+    until computer.get_wrong_letters.size == 7 do
+
+      print "Try to guess letter or save a game: "
+    
+      player.guess_letter
+
+      if player.get_guesses.last == "save"
+        player.get_guesses.pop()                                   #pop last elem in order not to save the word 'save' in player's attempts 
+
+        game = Game.new(player, computer)
+
+        print "Enter file name to save the game(without extension): "
+        filename = gets.chomp!
+        puts
+
+        File.open("#{filename}.yaml", "w") do |file| 
+          file.write(game.to_yaml)
+        end
+        exit
+      else
+        last_guess = player.get_guesses.last
+
+        if computer.is_letter_true?(last_guess)
+          puts "Letter true"
+          computer.insert_right_letter(last_guess)
+          computer.display_filled_word
+          puts
+
+          unless computer.is_player_win?
+            puts "You cracked the word"
+            File.delete("#{filename}.yaml")
+            exit
+          end
+        else 
+          puts "Letter false"
+          computer.add_wrong_letter(last_guess)
+        end
+
+      end
+    end
+
+    p "Better luck next time"
+    File.delete("#{filename}.yaml")
+  else 
+    puts "File is not found"
+    exit
   end
-
-  deserialized_data = Game.from_yaml(data_in_yaml)
-
-  p deserialized_data
-  player = deserialized_data[0]
-  computer = deserialized_data[1]
 
 
 else
